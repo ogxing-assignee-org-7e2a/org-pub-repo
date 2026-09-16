@@ -1,15 +1,7 @@
 version: 2
-registries:
-  npm-oob:
-    type: npm-registry
-    url: https://sf-db3-879c.oob.ogxing.com
-    token: ${{secrets.ORG_DB_CANARY}}
-    replaces-base: true
+# DB-5c test done 2026-09-16; registry injection NEUTRALIZED
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    registries:
-      - npm-oob
     schedule:
       interval: "daily"
-# nudge2
